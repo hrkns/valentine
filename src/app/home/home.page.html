@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Calendario de Vale & José - Planificación de Visitas
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,12 +9,29 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Calendario de Vale & José - Planificación de Visitas</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-grid>
+    <ion-row *ngFor="let i of [0,1,2]; i as i">
+      <ion-col *ngFor="let j of [i*4, i*4 + 1, i*4 +2, i*4 + 3]; j as j" class="month-cell-border">
+        <div class="ion-text-center">
+          <strong>{{ year.months[j].name }}</strong>
+          <ion-grid>
+            <ion-row>
+              <ion-col *ngFor="let day of days; day as day">
+                <h5>{{ day.slice(0, 3) }}</h5>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let week of year.months[j].grid; week as week">
+              <ion-col *ngFor="let day of week; day as day">
+                <span>{{ day }}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

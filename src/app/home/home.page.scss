@@ -25,3 +25,10 @@
 #container a {
   text-decoration: none;
 }
+
+.month-cell-border {
+  border-color: black; 
+  border-width: .01em; 
+  border-style:solid; margin-bottom : -1px;
+  background-color: #ffffff;
+}

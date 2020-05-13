@@ -7,7 +7,22 @@ export class Year {
 
   constructor(parameterYear?: number) {
 
-    this.year = parameterYear ? parameterYear : new Date().getFullYear();
+    this.update(parameterYear ? parameterYear : new Date().getFullYear());
+  }
+
+  public Months(): Array<Month> {
+
+    return this.months;
+  }
+
+  public Year(): number {
+
+    return this.year;
+  }
+
+  public update(parameterYear: number): void {
+
+    this.year = parameterYear;
 
     this.months = [
       new Month('Enero', 31),
@@ -30,10 +45,5 @@ export class Year {
         :
         this.months[index - 1].FirstDayOfTheFollowingMonth())
     );
-  }
-
-  public Months(): Array<Month> {
-
-    return this.months;
   }
 }

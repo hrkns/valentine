@@ -5,9 +5,9 @@ admin.initializeApp();
 
 const request = functions.https.onRequest;
 
-const httpResponse = (error:any, response:functions.Response, message?:string|object) => {
-  const status = error ? 400 : 200;
-  const msg = error ? error : message;
+const httpResponse = (response:functions.Response, successResponse:string|object, errorResponse:any) => {
+  const status = errorResponse ? 400 : 200;
+  const msg = errorResponse ? errorResponse : successResponse;
   response.status(status).send(msg);
 }
 
@@ -38,7 +38,7 @@ export const setWorkPeriodsStartDate = request(async (req, res) => {
           start_date: payload.start_date,
         }, error => {
     
-          httpResponse(error, res, 'Establecido inicio de ciclos de 4 dias.');
+          httpResponse(res, 'Establecido inicio de ciclos de 4 dias.', error);
         });
       });
 });
@@ -49,7 +49,7 @@ export const getWorkPeriodsStartDate = request(async (req, res) => {
 
     value.forEach((first:any) => {
 
-      httpResponse(null, res, first);
+      httpResponse(res, first, null);
     });
   });
 });

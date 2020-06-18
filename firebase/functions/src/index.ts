@@ -1,9 +1,11 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as cors from 'cors';
 
 admin.initializeApp();
 
 const request = functions.https.onRequest;
+const corsFn = cors();
 
 const httpResponse = (response:functions.Response, successResponse:string|object, errorResponse:any) => {
   const status = errorResponse ? 400 : 200;
@@ -24,26 +26,37 @@ const getFromDbWorkPeriodsStartDate = (callback:any) => {
     .on('value', callback);
 };
 
-export const setWorkPeriodsStartDate = request(async (req, res) => {
+const fnRequest = function(fn: any) {
 
-    const payload = {
-      start_date : req.body.start_date,
-    };
+  return request(async (req, res) => {
 
-    // tslint:disable-next-line: no-floating-promises
-    ref(workPeriodsStartDateCollectionName)
-      .remove(() => {
+    corsFn(req, res, () => {
 
-        ref(workPeriodsStartDateCollectionName).push({
-          start_date: payload.start_date,
-        }, error => {
-    
-          httpResponse(res, 'Establecido inicio de ciclos de 4 dias.', error);
-        });
+      fn(req, res);
+    });
+  });
+}
+
+export const setWorkPeriodsStartDate = fnRequest((req: any, res: any) => {
+
+  const payload = {
+    start_date : req.body.start_date,
+  };
+
+  // tslint:disable-next-line: no-floating-promises
+  ref(workPeriodsStartDateCollectionName)
+    .remove(() => {
+
+      ref(workPeriodsStartDateCollectionName).push({
+        start_date: payload.start_date,
+      }, error => {
+  
+        httpResponse(res, 'Establecido inicio de ciclos de 4 dias.', error);
       });
+    });
 });
 
-export const getWorkPeriodsStartDate = request(async (req, res) => {
+export const getWorkPeriodsStartDate = fnRequest((req: any, res: any) => {
 
   getFromDbWorkPeriodsStartDate((value:any) => {
 

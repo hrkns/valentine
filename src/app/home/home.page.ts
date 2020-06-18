@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Year } from 'src/classes/Year';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-home',
@@ -12,13 +13,25 @@ export class HomePage {
   public days = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'];
   public currentYear: number;
 
-  constructor() {}
+  constructor(
+    private API: ApiService
+  ) {}
 
   // tslint:disable-next-line:use-lifecycle-interface
   ngOnInit() {
 
     this.year = new Year();
     this.currentYear = this.year.Year();
+
+    // get start date of work periods
+    this
+      .API
+      .getWorkPeriodsStartDate()
+      .subscribe(data => {
+        console.log('data', data);
+      }, error => {
+        console.log('error', error);
+      });
   }
 
   public decreaseYear(): void {

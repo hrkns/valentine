@@ -52,8 +52,6 @@ export class Month {
       }
 
       this.firstDayOfTheFollowingMonth = firstDayOfTheWeek;
-
-      console.log(this.firstDayOfTheFollowingMonth);
     } else {
 
       return this.grid;

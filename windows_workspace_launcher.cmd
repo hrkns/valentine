@@ -1,4 +1,4 @@
-start "ionic application" /max cmd /k "ionic serve"
+start "ionic application" /max cmd /k "cd ionic & ionic serve"
 timeout /t 1
 start "repositorio" /max cmd /k "cls & git status"
 timeout /t 1

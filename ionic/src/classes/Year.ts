@@ -1,20 +1,23 @@
-import { Month } from './Month';
+import { Month, MonthsData } from './Month';
 
 export class Year {
 
   private months: Array<Month>;
   private year: number;
   private next: any;
-  private nexes = {};
+  private metadataforYears = {};
+  private startDateWorkPeriods: Date;
 
-  constructor(parameterYear?: number) {
+  constructor(parameterYear?: number, startDateWorkPeriods?: Date) {
 
     parameterYear = parameterYear ? parameterYear : new Date().getFullYear();
-    this.nexes[parameterYear] = {
+    startDateWorkPeriods = startDateWorkPeriods ? startDateWorkPeriods : new Date(`${new Date().getFullYear()}-1-1`);
+    this.metadataforYears[parameterYear] = {
       remainingForTheStart : 4,
       factor: -1,
+      startDateWorkPeriods,
     };
-    this.update(parameterYear);
+    this._update(parameterYear);
   }
 
   public Months(): Array<Month> {
@@ -27,24 +30,24 @@ export class Year {
     return this.year;
   }
 
-  public update(parameterYear: number): void {
+  private _update(year: number): void {
 
-    this.year = parameterYear;
-    this.next = this.nexes[this.year];
+    this.year = year;
+    this.next = this.metadataforYears[this.year];
 
     this.months = [
-      new Month('Enero', 31),
-      new Month('Febrero', 28 + Number(((this.year % 4 === 0) && (this.year % 100 !== 0)) || (this.year % 400 === 0))),
-      new Month('Marzo', 31),
-      new Month('Abril', 30),
-      new Month('Mayo', 31),
-      new Month('Junio', 30),
-      new Month('Julio', 31),
-      new Month('Agosto', 31),
-      new Month('Septiembre', 30),
-      new Month('Octubre', 31),
-      new Month('Noviembre', 30),
-      new Month('Diciembre', 31),
+      new Month(MonthsData.JANUARY, this.year),
+      new Month(MonthsData.FEBRUARY, this.year),
+      new Month(MonthsData.MARCH, this.year),
+      new Month(MonthsData.APRIL, this.year),
+      new Month(MonthsData.MAY, this.year),
+      new Month(MonthsData.JUNE, this.year),
+      new Month(MonthsData.JULY, this.year),
+      new Month(MonthsData.AUGUST, this.year),
+      new Month(MonthsData.SEPTEMBER, this.year),
+      new Month(MonthsData.OCTOBER, this.year),
+      new Month(MonthsData.NOVEMBER, this.year),
+      new Month(MonthsData.DECEMBER, this.year),
     ];
 
     this.months.forEach((month, index) =>
@@ -54,27 +57,33 @@ export class Year {
         this.months[index - 1].FirstDayOfTheFollowingMonth())
     );
 
-    this.nexes[this.year] = this.next;
-
-    if (this.year > new Date().getFullYear()) {
-
-      this.StartDateWorkPeriods(new Date(`${this.year}-1-1`));
-    }
+    this.metadataforYears[this.year] = this.next;
   }
 
-  public StartDateWorkPeriods(value?: Date): Date | void {
+  public update(year: number): void {
+    this._update(year);
+    this.DrawWorkPeriods();
+  }
 
-    if (value) {
+  public DrawWorkPeriods(): Date {
 
-      let month = value.getMonth();
+    let startDate = this.metadataforYears[this.year].startDateWorkPeriods;
+    let month = startDate.getMonth();
 
-      while (month++ < 12) {
+    while (month++ < 12) {
 
-        this.next = this.months[month - 1].DrawWorkingDays(value.getDate(), this.next.remainingForTheStart, this.next.factor);
-        value = new Date(`${value.getFullYear()}-${month + 1}-1`);
-      }
-
-      this.nexes[this.year + 1] = this.next;
+      this.next = this.months[month - 1].DrawWorkingDays(startDate.getDate(), this.next.remainingForTheStart, this.next.factor);
+      startDate = new Date(`${startDate.getFullYear()}-${month + 1}-1`);
     }
+
+    this.metadataforYears[this.year + 1] = this.next;
+    this.metadataforYears[this.year + 1].startDateWorkPeriods = new Date(`${this.year}-1-1`);
+
+    return this.startDateWorkPeriods;
+  }
+
+  public ItIsInTheCurrentYear() {
+
+    return this.year === new Date().getFullYear();
   }
 }

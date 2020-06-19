@@ -12,6 +12,7 @@ export class HomePage {
   public year: Year;
   public days = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'];
   public currentYear: number;
+  private itIsInTheCurrentYear = true;
 
   constructor(
     private API: ApiService
@@ -20,16 +21,15 @@ export class HomePage {
   // tslint:disable-next-line:use-lifecycle-interface
   ngOnInit() {
 
-    this.year = new Year();
-    this.currentYear = this.year.Year();
-
     // get start date of work periods
     this
       .API
       .getWorkPeriodsStartDate()
       .subscribe((data: any) => {
 
-        this.year.StartDateWorkPeriods(new Date(data.start_date));
+        this.currentYear = new Date().getFullYear();
+        this.year = new Year(this.currentYear, new Date(data.start_date));
+        this.year.DrawWorkPeriods();
       }, error => {
 
         console.log('error', error);

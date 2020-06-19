@@ -1,21 +1,78 @@
 import {Day} from './Day';
 
+export const MonthsData = {
+  JANUARY : {
+    name : 'Enero',
+    number : 1,
+    amountOfDays : 31,
+  },
+  FEBRUARY : {
+    name : 'Febrero',
+    number : 2,
+    amountOfDays : 28,
+  },
+  MARCH : {
+    name : 'Marzo',
+    number : 3,
+    amountOfDays : 31,
+  },
+  APRIL : {
+    name : 'Abril',
+    number : 4,
+    amountOfDays : 30,
+  },
+  MAY : {
+    name : 'Mayo',
+    number : 5,
+    amountOfDays : 31,
+  },
+  JUNE : {
+    name : 'Junio',
+    number : 6,
+    amountOfDays : 30,
+  },
+  JULY : {
+    name : 'Julio',
+    number : 7,
+    amountOfDays : 31,
+  },
+  AUGUST : {
+    name : 'Agosto',
+    number : 8,
+    amountOfDays : 31,
+  },
+  SEPTEMBER : {
+    name : 'Septiembre',
+    number : 9,
+    amountOfDays : 30,
+  },
+  OCTOBER : {
+    name : 'Octubre',
+    number : 10,
+    amountOfDays : 31,
+  },
+  NOVEMBER : {
+    name : 'Noviembre',
+    number : 11,
+    amountOfDays : 30,
+  },
+  DECEMBER : {
+    name : 'Diciembre',
+    number : 12,
+    amountOfDays : 31,
+  },
+};
+
 export class Month {
 
-  private name: string;
-  private amountOfDays: number;
+  private metadata: any;
   private grid: Array<Array<Day>>;
   private firstDayOfTheFollowingMonth: number = null;
 
-  constructor(parameterName: string, parameterAmountOfDays?: number) {
+  constructor(metadata: any, year?: number) {
 
-    this.name = parameterName;
-
-    if (parameterAmountOfDays) {
-
-      this.amountOfDays = parameterAmountOfDays;
-    }
-
+    this.metadata = metadata;
+    this.metadata.year = year;
     this.grid = [];
   }
 
@@ -26,7 +83,7 @@ export class Month {
       this.grid = [];
       let day = 1, currentWeekDay;
 
-      while (day <= this.amountOfDays) {
+      while (day <= this.metadata.amountOfDays) {
 
         currentWeekDay = 0;
         const week = [];
@@ -37,7 +94,7 @@ export class Month {
           currentWeekDay++;
         }
 
-        while (currentWeekDay < 7 && day <= this.amountOfDays) {
+        while (currentWeekDay < 7 && day <= this.metadata.amountOfDays) {
 
           week.push(new Day(day++));
           currentWeekDay++;
@@ -69,10 +126,10 @@ export class Month {
 
     if (parameterName) {
 
-      this.name = parameterName;
+      this.metadata.name = parameterName;
     } else {
 
-      return this.name;
+      return this.metadata.name;
     }
   }
 
@@ -99,12 +156,17 @@ export class Month {
             factor = -1;
           }
 
-          if (factor === -1) {
+          const goingThroughDate = new Date(`${this.metadata.year}-${this.metadata.number}-${day}`);
 
-            this.grid[i][j].WorkDay();
-          } else {
+          if (goingThroughDate > today) {
 
-            this.grid[i][j].FreeDay();
+            if (factor === -1) {
+
+              this.grid[i][j].WorkDay();
+            } else {
+
+              this.grid[i][j].FreeDay();
+            }
           }
 
           remainingForTheStart += factor;

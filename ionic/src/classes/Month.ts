@@ -1,8 +1,10 @@
+import {Day} from './Day';
+
 export class Month {
 
   private name: string;
   private amountOfDays: number;
-  private grid: Array<Array<string>>;
+  private grid: Array<Array<Day>>;
   private firstDayOfTheFollowingMonth: number = null;
 
   constructor(parameterName: string, parameterAmountOfDays?: number) {
@@ -17,7 +19,7 @@ export class Month {
     this.grid = [];
   }
 
-  public Grid(firstDayOfTheWeek?: number): void | Array<Array<string>> {
+  public Grid(firstDayOfTheWeek?: number): void | Array<Array<Day>> {
 
     if (firstDayOfTheWeek !== undefined) {
 
@@ -31,13 +33,13 @@ export class Month {
 
         while (currentWeekDay < firstDayOfTheWeek) {
 
-          week.push('');
+          week.push(new Day());
           currentWeekDay++;
         }
 
         while (currentWeekDay < 7 && day <= this.amountOfDays) {
 
-          week.push(String(day++));
+          week.push(new Day(day++));
           currentWeekDay++;
         }
 
@@ -45,7 +47,7 @@ export class Month {
 
         while (currentWeekDay++ < 7) {
 
-          week.push('');
+          week.push(new Day());
         }
 
         this.grid.push(week);
@@ -72,5 +74,48 @@ export class Month {
 
       return this.name;
     }
+  }
+
+  public DrawWorkingDays(day: number, remainingForTheStart?: number, factor?: number) {
+
+    const n = this.grid.length;
+    const today = new Date();
+
+    for (let i = 0; i < n; i++) {
+
+      for (let j = 0; j < 7; j++) {
+
+        const val = this.grid[i][j].Value();
+
+        if (val.length && Number(val) === day) {
+
+          if (remainingForTheStart === 0) {
+
+            factor = 1;
+          }
+
+          if (remainingForTheStart === 4) {
+
+            factor = -1;
+          }
+
+          if (factor === -1) {
+
+            this.grid[i][j].WorkDay();
+          } else {
+
+            this.grid[i][j].FreeDay();
+          }
+
+          remainingForTheStart += factor;
+          day++;
+        }
+      }
+    }
+
+    return {
+      remainingForTheStart,
+      factor,
+    };
   }
 }

@@ -27,17 +27,22 @@ export class HomePage {
     this
       .API
       .getWorkPeriodsStartDate()
-      .subscribe(data => {
-        console.log('data', data);
+      .subscribe((data: any) => {
+
+        this.year.StartDateWorkPeriods(new Date(data.start_date));
       }, error => {
+
         console.log('error', error);
       });
   }
 
   public decreaseYear(): void {
 
-    this.currentYear--;
-    this.year.update(this.currentYear);
+    if (new Date().getFullYear() < this.currentYear) {
+
+      this.currentYear--;
+      this.year.update(this.currentYear);
+    }
   }
 
   public increaseYear(): void {

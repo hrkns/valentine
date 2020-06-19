@@ -4,10 +4,17 @@ export class Year {
 
   private months: Array<Month>;
   private year: number;
+  private next: any;
+  private nexes = {};
 
   constructor(parameterYear?: number) {
 
-    this.update(parameterYear ? parameterYear : new Date().getFullYear());
+    parameterYear = parameterYear ? parameterYear : new Date().getFullYear();
+    this.nexes[parameterYear] = {
+      remainingForTheStart : 4,
+      factor: -1,
+    };
+    this.update(parameterYear);
   }
 
   public Months(): Array<Month> {
@@ -23,6 +30,7 @@ export class Year {
   public update(parameterYear: number): void {
 
     this.year = parameterYear;
+    this.next = this.nexes[this.year];
 
     this.months = [
       new Month('Enero', 31),
@@ -45,5 +53,28 @@ export class Year {
         :
         this.months[index - 1].FirstDayOfTheFollowingMonth())
     );
+
+    this.nexes[this.year] = this.next;
+
+    if (this.year > new Date().getFullYear()) {
+
+      this.StartDateWorkPeriods(new Date(`${this.year}-1-1`));
+    }
+  }
+
+  public StartDateWorkPeriods(value?: Date): Date | void {
+
+    if (value) {
+
+      let month = value.getMonth();
+
+      while (month++ < 12) {
+
+        this.next = this.months[month - 1].DrawWorkingDays(value.getDate(), this.next.remainingForTheStart, this.next.factor);
+        value = new Date(`${value.getFullYear()}-${month + 1}-1`);
+      }
+
+      this.nexes[this.year + 1] = this.next;
+    }
   }
 }

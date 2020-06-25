@@ -1,57 +1,51 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Calendario de Vale & José - Planificación de Visitas
+      {{ title }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Calendario de Vale & José - Planificación de Visitas</ion-title>
+      <ion-title size="large">{{ title }}</ion-title>
     </ion-toolbar>
   </ion-header>
-
   <ion-grid>
-    <ion-row>
-      <ion-col size="4" offset="4">
-        <ion-row *ngIf="year">
-          <ion-col size="1" offset="3" class="ion-align-self-end">
-            <ion-button (click)="decreaseYear()" *ngIf="!year.ItIsInTheCurrentYear()">
-              <ion-icon name="remove-circle-outline"></ion-icon>
-            </ion-button>
-          </ion-col>
-          <ion-col size="4" class="ion-align-self-center">
-            <ion-input readonly type="text" [(ngModel)]="currentYear" class="current-year-input"></ion-input>
-          </ion-col>
-          <ion-col size="1" class="ion-align-self-start">
-            <ion-button (click)="increaseYear()">
-              <ion-icon name="add-circle-outline"></ion-icon>
-            </ion-button>
-          </ion-col>
-        </ion-row>
+    <ion-row *ngIf="year">
+      <ion-col size="4">
+        <ion-button (click)="decreaseYear()" *ngIf="!year.ItIsInTheCurrentYear()" expand="full" color="dark">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-input readonly type="text" [(ngModel)]="currentYear" class="current-year-input"></ion-input>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button (click)="increaseYear()" expand="full" color="dark">
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </ion-button>
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let i of [0,1,2]; i as i">
-      <ion-col size='3' size-sm='12' *ngFor="let j of [i*4, i*4 + 1, i*4 +2, i*4 + 3]; j as j">
-        <div *ngIf="year && !year.Months()[j].AlreadyPassed()">
-          <div class="ion-text-center" *ngIf="year" class="month">
-            <strong>{{ year.Months()[j].Name() }}</strong>
-            <ion-grid>
-              <ion-row>
-                <ion-col *ngFor="let day of days; day as day">
-                  <h5>{{ day.slice(0, 3) }}</h5>
-                </ion-col>
-              </ion-row>
-              <ion-row *ngFor="let week of year.Months()[j].Grid(); week as week">
-                <ion-col *ngFor="let day of week; day as day" [ngClass]="[day.ClassType()]">
-                  <span>{{ day.Value() }}</span>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </div>
-        </div>
+    <ion-row *ngIf="year">
+      <ion-col size='12' size-sm='6' size-md='6' size-lg='4' *ngFor="let month of year.Months({passed:false}); month as month" class="ion-text-center month">
+        <strong>{{ month.Name() }}</strong>
+        <ion-grid>
+          <ion-row>
+            <ion-col *ngFor="let day of days; day as day">
+              <h5>
+                <strong>
+                  {{ day[0] }}
+                </strong>
+              </h5>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngFor="let week of month.Grid(); week as week">
+            <ion-col *ngFor="let day of week; day as day" [ngClass]="[day.ClassType()]">
+              <span>{{ day.Value() }}</span>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-col>
     </ion-row>
   </ion-grid>

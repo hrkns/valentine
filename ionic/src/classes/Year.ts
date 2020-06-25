@@ -22,7 +22,10 @@ export class Year {
 
   public Months(): Array<Month> {
 
-    return this.months;
+    return this.months.filter(month => {
+
+      return !month.AlreadyPassed();
+    });
   }
 
   public Year(): number {

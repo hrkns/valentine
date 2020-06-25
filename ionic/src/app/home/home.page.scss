@@ -26,11 +26,13 @@
   text-decoration: none;
 }
 
-.month-cell-border {
+.month {
   border-color: black; 
   border-width: .01em; 
   border-style:solid; margin-bottom : -1px;
   background-color: #ffffff;
+  text-align: center;
+  padding:2%;
 }
 
 .current-year-input {

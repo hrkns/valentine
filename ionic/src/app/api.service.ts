@@ -14,7 +14,7 @@ export class ApiService {
     private http: HttpClient
   ) {
 
-    this.API_URL = 'http://us-central1-valentine-913e5.cloudfunctions.net/';
+    this.API_URL = `${window.location.protocol}//${window.location.hostname}:3000/`;
     this.endpoints = {
       getWorkPeriodsStartDate : 'getWorkPeriodsStartDate',
       setWorkPeriodsStartDate : 'setWorkPeriodsStartDate',
@@ -23,10 +23,6 @@ export class ApiService {
 
   getWorkPeriodsStartDate(): Observable<object> {
 
-    return this.http.post(this.API_URL + this.endpoints.getWorkPeriodsStartDate, {}, {
-      headers : {
-        'Access-Control-Allow-Origin' : 'http://localhost:8100',
-      }
-    });
+    return this.http.post(this.API_URL + this.endpoints.getWorkPeriodsStartDate, {});
   }
 }

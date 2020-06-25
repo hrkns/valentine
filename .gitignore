@@ -29,3 +29,5 @@ ionic/node_modules
 ionic/platforms
 ionic/plugins
 ionic/www
+
+api/node_modules

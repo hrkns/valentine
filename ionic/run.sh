@@ -1,1 +1,1 @@
-ionic serve --address=jrosendo.com
+cd ionic && ionic serve --address=jrosendo.com

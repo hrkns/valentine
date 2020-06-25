@@ -17,8 +17,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/api', BaseRouter);
-// tslint:disable-next-line:no-console
-console.log('process.env.WS_VALENTINE_FIREBASE_HOST', process.env.WS_VALENTINE_FIREBASE_HOST);
 app.use('/', proxy(process.env.WS_VALENTINE_FIREBASE_HOST));
 
 /**

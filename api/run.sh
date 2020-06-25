@@ -1,1 +1,1 @@
-npm run start-dev
+cd api && npm run start-dev

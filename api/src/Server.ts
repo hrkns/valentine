@@ -17,7 +17,9 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/api', BaseRouter);
-app.use('/', proxy('http://us-central1-valentine-913e5.cloudfunctions.net/'));
+// tslint:disable-next-line:no-console
+console.log('process.env.WS_VALENTINE_FIREBASE_HOST', process.env.WS_VALENTINE_FIREBASE_HOST);
+app.use('/', proxy(process.env.WS_VALENTINE_FIREBASE_HOST));
 
 /**
  * Point express to the 'views' directory. If you're using a

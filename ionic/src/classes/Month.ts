@@ -69,7 +69,19 @@ export class Month {
   private grid: Array<Array<Day>>;
   private firstDayOfTheFollowingMonth: number = null;
 
+  private leapYear(year: number) {
+
+    return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+  }
+
   constructor(metadata: any, year?: number) {
+
+    year = year || new Date().getFullYear();
+
+    if (metadata.number === 2 && this.leapYear(year)) {
+
+      metadata.amountOfDays = 29;
+    }
 
     this.metadata = metadata;
     this.metadata.year = year;
@@ -179,5 +191,12 @@ export class Month {
       remainingForTheStart,
       factor,
     };
+  }
+
+  public AlreadyPassed() {
+
+    const currentDate = new Date();
+
+    return this.metadata.number < (currentDate.getMonth() + 1) && this.metadata.year <= currentDate.getFullYear();
   }
 }
